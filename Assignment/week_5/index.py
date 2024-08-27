@@ -1,6 +1,6 @@
 name = input("Enter your name :\t")
 print(f"Hello, {name}! Let's explore some numbers together.")
-#test
+
 
 numbers = []
 for num in range(3):
