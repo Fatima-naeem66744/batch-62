@@ -56,7 +56,6 @@ while True:
                 score = float(input(f"Enter score for subject {i+1}: "))
                 scores.append(score)
 
-            # Now add the student after collecting all scores
             tracker.add_student(name, scores)
 
             """4. Calculate Averages and Display Performance"""
