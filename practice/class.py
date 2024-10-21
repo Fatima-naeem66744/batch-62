@@ -1,68 +1,63 @@
-"""1. Create the Student Class"""
-class Student:
-    def __init__(self, name, scores):
-        self.name = name
-        self.scores = scores
+"""validate using pandera following code
+from typing import List, Dict, Any
+import pandas as pd
+import pandera as pa
+from pandera import Column, DataFrameSchema, Check
 
-    def calculate_average(self):
-        total_score = sum(self.scores)
-        num_subjects = len(self.scores)
-        average_score = total_score / num_subjects
-        return average_score
+# Define the student data
+student_data = [
+    {'roll no': 101, 'name': 'Alice', 'father': 'John Doe', 'course': 'BSc Computer Science', 'date of admission': '2021-09-01', 'fee': 5000},
+    {'roll no': 102, 'name': 'Bob', 'father': 'Michael Smith', 'course': 'BSc Mathematics', 'date of admission': '2021-09-05', 'fee': 4500},
+    {'roll no': 103, 'name': 'Charlie', 'father': 'Robert Brown', 'course': 'BA English', 'date of admission': '2021-09-08', 'fee': 4000},
+    {'roll no': 104, 'name': 'David', 'father': 'James Wilson', 'course': 'BBA', 'date of admission': '2021-09-10', 'fee': 5500},
+    {'roll no': 105, 'name': 'Eva', 'father': 'William Johnson', 'course': 'BCom', 'date of admission': '2021-09-12', 'fee': 4700},
+    {'roll no': 106, 'name': 'Frank', 'father': 'George Clark', 'course': 'BSc Physics', 'date of admission': '2021-09-15', 'fee': 5100},
+    {'roll no': 107, 'name': 'Grace', 'father': 'Henry Lewis', 'course': 'BSc Chemistry', 'date of admission': '2021-09-17', 'fee': 4800},
+    {'roll no': 108, 'name': 'Hannah', 'father': 'Charles Harris', 'course': 'BBA', 'date of admission': '2021-09-20', 'fee': 5500},
+    {'roll no': 109, 'name': 'Ivy', 'father': 'Joseph Martin', 'course': 'BSc Biology', 'date of admission': '2021-09-22', 'fee': 4900},
+    {'roll no': 110, 'name': 'Jake', 'father': 'David Thomas', 'course': 'BA History', 'date of admission': '2021-09-25', 'fee': 4600}
+]
 
-    def is_passing(self):
-        average_score = self.calculate_average()
-        passing_score = 60
-        return average_score >= passing_score
+# Create a DataFrame
+student_df = pd.DataFrame(student_data)
+student_df['date of admission'] = pd.to_datetime(student_df['date of admission'])
 
-"""2. Create the PerformanceTracker Class"""
+# Define a Pandera schema for validation
+schema = pa.DataFrameSchema({
+    "roll no": Column(int, [Check.ge(100), Check.le(999)], nullable=False),  # Roll no between 100 and 999
+    "name": Column(str, nullable=False),  # Name must be a string
+    "father": Column(str, nullable=False),  # Father's name must be a string
+    "course": Column(str, Check.isin(["BSc Computer Science", "BSc Mathematics", "BA English", "BBA", "BCom", "BSc Physics", "BSc Chemistry", "BSc Biology", "BA History"]), nullable=False),  # Course must be one of the provided options
+    "date of admission": Column(pa.DateTime, nullable=False),  # Valid date format
+    "fee": Column(int, [Check.ge(4000), Check.le(6000)], nullable=False)  # Fee between 4000 and 6000
+})
 
-class PerformanceTracker:
-    def __init__(self):
-        self.students = {}
+# Validate the DataFrame
+validated_df = schema.validate(student_df)
+print(validated_df)
 
-    def add_student(self, name, scores):
-        new_student = Student(name, scores)
-        self.students[name] = new_student
 
-    def calculate_class_average(self):
-        total_score = 0
-        num_students = len(self.students)
-        for student in self.students.values():
-            total_score += student.calculate_average()
-        class_average = total_score / num_students
-        return class_average
 
-    def display_student_performance(self):
-        for student_name, student in self.students.items():
-            average_score = student.calculate_average()
-            passing_status = student.is_passing()
-            print(f"{student_name}'s average score: {average_score}")
-            print(f"{student_name}'s passing status: {passing_status}")
-            print()
+"""
 
-tracker = PerformanceTracker()
+from typing import List, Dict, Any
+import pandas as pd
+import pandera as pa
+from pandera import Column, DataFrameSchema, Check
 
-"""3. Handle User Input"""
-while True:
-    try:
-        name = input("Enter student's name (or 'exit' to stop): ")
-        if name.lower() == "exit":
-            print("Exiting the program. Goodbye!")
-            break
-        else:
-            scores = []
-            for i in range(3):
-                score = float(input(f"Enter score for subject {i+1}: "))
-                scores.append(score)
+# Define the student data
 
-            # Now add the student after collecting all scores
-            tracker.add_student(name, scores)
+student_data = [
+    {'roll no': 101, 'name': 'Alice', 'father': 'John Doe', 'course': 'BSc Computer Science', 'date of admission': '2021-09-01', 'fee': 5000},
+    {'roll no': 102, 'name': 'Bob', 'father': 'Michael Smith', 'course': 'BSc Mathematics', 'date of admission': '2021-09-05', 'fee': 4500},
+    {'roll no': 103, 'name': 'Charlie', 'father': 'Robert Brown', 'course': 'BA English', 'date of admission': '2021-09-08', 'fee': 4000},
+    {'roll no': 104, 'name': 'David', 'father': 'James Wilson', 'course': 'BBA', 'date of admission': '2021-09-10', 'fee': 5500},
+    {'roll no': 105, 'name': 'Eva', 'father': 'William' 'course': 'BCom', 'date of admission': '2021-09-12', 'fee': 4700},
+    {'roll no': 106, 'name': 'Frank', 'father': 'George Clark', 'course': 'BSc Physics', 'date of admission': '2021-09-15', 'fee': 5100},
+    {'roll no': 107, 'name': 'Grace', 'father': 'Henry Lewis', 'course': 'BSc Chemistry', 'date of ad '}
 
-            """4. Calculate Averages and Display Performance"""
-            tracker.display_student_performance()
-            class_average = tracker.calculate_class_average()
-            print(f"Class average score: {class_average}\n")
+]
 
-    except ValueError:
-        print("Please enter a valid number for the scores, not letters.")
+
+
+     
