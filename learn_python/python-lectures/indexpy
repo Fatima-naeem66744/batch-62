@@ -1,0 +1,18 @@
+name : str = "  fatima       naeem    "
+'''how to remove thhe spaces'''
+print(name.strip())
+
+
+# a cube of list
+# list of enumeration
+# strip()
+
+
+[i**3 for i in range(1,11)]
+
+name = "     Fatima      Naeem"
+' '.join(name.split())
+
+
+
+
